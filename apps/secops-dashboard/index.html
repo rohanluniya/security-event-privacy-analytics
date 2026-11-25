@@ -1,0 +1,721 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SecOps &amp; Privacy-Preserving Analytics Control Tower</title>
+  <style>
+    :root {
+      --bg-0: #070b14;
+      --bg-1: #0e1525;
+      --bg-2: #151f36;
+      --border: #24324f;
+      --text-0: #f1f5f9;
+      --text-1: #94a3b8;
+      --text-2: #64748b;
+      --cyan: #22d3ee;
+      --blue: #3b82f6;
+      --indigo: #818cf8;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --purple: #a855f7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, sans-serif;
+      background: radial-gradient(circle at top right, #111d38 0%, var(--bg-0) 55%);
+      color: var(--text-0);
+      min-height: 100vh;
+      line-height: 1.45;
+      padding: 20px 24px 48px;
+    }
+    .container { max-width: 1420px; margin: 0 auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      padding: 18px 22px;
+      background: linear-gradient(135deg, rgba(21,31,54,0.95), rgba(14,21,37,0.95));
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 18px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+    .brand h1 {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .brand .shield {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 30px;
+      height: 30px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, var(--cyan), var(--blue));
+      color: #04101d;
+      font-weight: 900;
+      font-size: 14px;
+    }
+    .brand p { color: var(--text-1); font-size: 13px; margin-top: 4px; }
+    .controls {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 11px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.8);
+      color: var(--text-1);
+    }
+    .pill .dot {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--emerald);
+      box-shadow: 0 0 8px var(--emerald);
+    }
+    select, input, button {
+      font-family: inherit;
+      font-size: 12.5px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-1);
+      color: var(--text-0);
+      padding: 7px 11px;
+      outline: none;
+    }
+    select:focus, input:focus { border-color: var(--cyan); }
+    button {
+      cursor: pointer;
+      font-weight: 600;
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      border-color: #3b82f6;
+      transition: transform 0.08s ease, opacity 0.12s ease;
+    }
+    button:hover { opacity: 0.92; }
+    button:active { transform: translateY(1px); }
+    button.secondary { background: var(--bg-2); border-color: var(--border); color: var(--text-0); }
+    button.danger { background: linear-gradient(135deg, #be123c, #e11d48); border-color: var(--rose); }
+    button.emerald { background: linear-gradient(135deg, #047857, #10b981); border-color: var(--emerald); }
+
+    .kpi-grid {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+    @media (max-width: 1180px) { .kpi-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+    @media (max-width: 680px) { .kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    .kpi {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+    .kpi::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; height: 3px;
+      background: var(--accent, var(--cyan));
+    }
+    .kpi .label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-1); font-weight: 600; }
+    .kpi .value { font-size: 21px; font-weight: 800; margin: 6px 0 3px; letter-spacing: -0.02em; white-space: nowrap; }
+    .kpi .sub { font-size: 11.5px; color: var(--text-2); }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1.55fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .grid-equal {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    @media (max-width: 1024px) { .grid-2, .grid-equal { grid-template-columns: 1fr; } }
+
+    .card {
+      background: var(--bg-1);
+      border: 1px solid var(--border);
+      border-radius: 13px;
+      padding: 16px 18px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.22);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+    .card h2 { font-size: 14.5px; font-weight: 700; color: var(--text-0); letter-spacing: -0.01em; }
+    .card .subtitle { font-size: 11.5px; color: var(--text-1); }
+
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th {
+      text-align: left;
+      color: var(--text-1);
+      font-weight: 600;
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 8px 8px;
+      border-bottom: 1px solid var(--border);
+    }
+    td {
+      padding: 8px 8px;
+      border-bottom: 1px solid rgba(36,50,79,0.55);
+      vertical-align: middle;
+    }
+    tr:last-child td { border-bottom: none; }
+    .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace; font-size: 11.2px; }
+
+    .badge {
+      display: inline-block;
+      padding: 2px 7px;
+      border-radius: 6px;
+      font-size: 10.5px;
+      font-weight: 700;
+      letter-spacing: 0.03em;
+    }
+    .b-crit { background: rgba(244,63,94,0.18); color: #fda4af; border: 1px solid rgba(244,63,94,0.45); }
+    .b-high { background: rgba(245,158,11,0.18); color: #fcd34d; border: 1px solid rgba(245,158,11,0.45); }
+    .b-med  { background: rgba(59,130,246,0.18); color: #93c5fd; border: 1px solid rgba(59,130,246,0.45); }
+    .b-low  { background: rgba(16,185,129,0.18); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.45); }
+    .b-retract { background: rgba(168,85,247,0.18); color: #d8b4fe; border: 1px solid rgba(168,85,247,0.45); }
+    .b-deny { background: rgba(244,63,94,0.15); color: #fda4af; border: 1px solid rgba(244,63,94,0.35); }
+    .b-allow { background: rgba(16,185,129,0.15); color: #6ee7b7; border: 1px solid rgba(16,185,129,0.35); }
+    .b-just { background: rgba(245,158,11,0.15); color: #fcd34d; border: 1px solid rgba(245,158,11,0.35); }
+
+    .bar-track {
+      width: 100%; height: 7px; background: var(--bg-2); border-radius: 999px; overflow: hidden;
+    }
+    .bar-fill { height: 100%; border-radius: 999px; }
+
+    .banner {
+      padding: 10px 14px;
+      border-radius: 9px;
+      font-size: 12px;
+      margin-bottom: 12px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.7);
+      display: none;
+    }
+    .banner.show { display: block; }
+    .banner.err { border-color: rgba(244,63,94,0.55); background: rgba(136,19,55,0.25); color: #fecdd3; }
+    .banner.ok  { border-color: rgba(16,185,129,0.55); background: rgba(6,78,59,0.28); color: #a7f3d0; }
+
+    .console-box {
+      background: #080d18;
+      border: 1px solid var(--border);
+      border-radius: 9px;
+      padding: 10px 12px;
+      margin-top: 10px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11.2px;
+      color: #cbd5e1;
+      max-height: 185px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .action-row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; margin-top: 8px; }
+    .chart-bars { display: flex; flex-direction: column; gap: 8px; margin-top: 6px; }
+    .chart-row { display: grid; grid-template-columns: 188px 1fr 34px; gap: 10px; align-items: center; font-size: 12px; }
+    .scroll-table { max-height: 310px; overflow-y: auto; }
+    .tiny-btn { padding: 3px 7px; font-size: 10.5px; border-radius: 5px; }
+    .lineage-list { display: flex; flex-direction: column; gap: 6px; margin-top: 4px; }
+    .lineage-edge {
+      display: flex; align-items: center; gap: 8px; font-size: 11.5px;
+      padding: 6px 10px; background: var(--bg-2); border-radius: 7px; border: 1px solid var(--border);
+    }
+    .lineage-arrow { color: var(--cyan); font-weight: 800; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="brand">
+        <h1><span class="shield">S9</span> Security Event &amp; Privacy-Preserving Analytics Control Tower</h1>
+        <p>Event-Time Streaming CEP · NAT-Aware Identity Resolution · Apache Iceberg V2 Privacy Zones · OPA-Aligned ABAC</p>
+      </div>
+      <div class="controls">
+        <span class="pill" id="healthPill"><span class="dot"></span><span id="freshnessText">Loading live status...</span></span>
+        <label style="font-size:12px;color:var(--text-1)">Active Role:</label>
+        <select id="roleSelect" title="Switch RBAC/ABAC Persona (Dev/Demo Key Binding)">
+          <option value="soc_responder" selected>soc_responder (Tokenized SOC)</option>
+          <option value="analyst_privacy_safe">analyst_privacy_safe (k-Anon Only)</option>
+          <option value="ir_lead_raw_evidence">ir_lead_raw_evidence (Break-Glass IR)</option>
+          <option value="privacy_officer">privacy_officer (GDPR &amp; Retention)</option>
+        </select>
+        <button id="refreshBtn" type="button">Refresh Live</button>
+      </div>
+    </header>
+
+    <div id="roleNotice" class="banner"></div>
+
+    <!-- KPI Cards -->
+    <section class="kpi-grid">
+      <div class="kpi" style="--accent: var(--rose)">
+        <div class="label">Active CEP Incidents</div>
+        <div class="value" id="kpiIncidents">--</div>
+        <div class="sub" id="kpiRetracted">Retracted: --</div>
+      </div>
+      <div class="kpi" style="--accent: var(--emerald)">
+        <div class="label">CEP Precision / Recall</div>
+        <div class="value" id="kpiPrecision">--</div>
+        <div class="sub" id="kpiDelay">p95 Delay: -- ms</div>
+      </div>
+      <div class="kpi" style="--accent: var(--cyan)">
+        <div class="label">Silver Tokenized Events</div>
+        <div class="value" id="kpiSilver">--</div>
+        <div class="sub" id="kpiZeroPii">Zero Raw PII Verified</div>
+      </div>
+      <div class="kpi" style="--accent: var(--indigo)">
+        <div class="label">k-Anonymous Buckets</div>
+        <div class="value" id="kpiKAnon">--</div>
+        <div class="sub" id="kpiKMin">Min k observed: --</div>
+      </div>
+      <div class="kpi" style="--accent: var(--amber)">
+        <div class="label">DQ Gate &amp; DLQ Quarantine</div>
+        <div class="value" id="kpiDq">--</div>
+        <div class="sub" id="kpiDlq">Quarantined DLQ: --</div>
+      </div>
+      <div class="kpi" style="--accent: var(--purple)">
+        <div class="label">Restricted Raw &amp; Audit</div>
+        <div class="value" id="kpiRaw">--</div>
+        <div class="sub" id="kpiAudit">Audit Ledger Events: --</div>
+      </div>
+    </section>
+
+    <!-- Row 1: CEP Incident Triage + Entity Risk & Rule Breakdown -->
+    <section class="grid-2">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Correlated CEP Incidents &amp; Analyst Disposition</h2>
+            <div class="subtitle">Versioned rules (v2) · Immutable SHA-256 evidence_ref · Clock-skew retractions</div>
+          </div>
+          <span class="badge b-med" id="incidentsBadge">Loading...</span>
+        </div>
+        <div id="incidentsDenied" class="banner err"></div>
+        <div class="scroll-table" id="incidentsWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rule</th>
+                <th>Severity</th>
+                <th>Status</th>
+                <th>Principal / Subnet</th>
+                <th>Delay</th>
+                <th>Evidence Ref</th>
+                <th>Disposition</th>
+              </tr>
+            </thead>
+            <tbody id="incidentsBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Entity Risk Leaderboard &amp; Rule Distribution</h2>
+            <div class="subtitle">Pseudonymous principals only · Excludes retracted alerts</div>
+          </div>
+          <span class="badge b-high" id="riskBadge">Top Risk</span>
+        </div>
+        <div id="riskDenied" class="banner err"></div>
+        <div class="chart-bars" id="ruleChart"></div>
+        <div class="scroll-table" style="max-height:190px;margin-top:12px" id="riskWrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Principal Token</th>
+                <th>Masked Email</th>
+                <th>Risk Score</th>
+                <th>Active / Retr</th>
+              </tr>
+            </thead>
+            <tbody id="riskBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- Row 2: Privacy-Safe Aggregates + ABAC Policy & Break-Glass / GDPR Console -->
+    <section class="grid-equal">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Privacy-Safe k-Anonymous Aggregates (k &ge; 5)</h2>
+            <div class="subtitle">Accessible to analyst_privacy_safe · Small buckets suppressed automatically</div>
+          </div>
+          <span class="badge b-allow" id="aggBadge">k &ge; 5 Enforced</span>
+        </div>
+        <div class="scroll-table">
+          <table>
+            <thead>
+              <tr>
+                <th>Stream</th>
+                <th>Country</th>
+                <th>Action</th>
+                <th>Events</th>
+                <th>Distinct k</th>
+                <th>Failures</th>
+              </tr>
+            </thead>
+            <tbody id="aggBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>ABAC Break-Glass Raw Evidence &amp; GDPR Privacy Controls</h2>
+            <div class="subtitle">Live HTTP 403 policy enforcement · Immutable audit trail</div>
+          </div>
+          <span class="badge b-just">OPA Parity</span>
+        </div>
+        <div class="action-row">
+          <input id="rawEventInput" class="mono" style="flex:1;min-width:150px" placeholder="Event ID for raw evidence" />
+          <input id="justificationInput" style="flex:1.4;min-width:180px" value="INC-2026-0091 lateral movement forensic review" placeholder="Mandatory X-Justification (>=12 chars)" />
+          <button id="btnBreakGlass" type="button" class="secondary">Query Raw Evidence</button>
+        </div>
+        <div class="action-row">
+          <input id="eraseTokenInput" class="mono" style="flex:1.6;min-width:190px" placeholder="principal_token for GDPR erasure" />
+          <button id="btnGdprErase" type="button" class="danger">GDPR Erase Subject</button>
+          <button id="btnRetentionSweep" type="button" class="emerald">Run Retention Sweep</button>
+        </div>
+        <div id="consoleOutput" class="console-box">Ready. Switch roles above and click "Query Raw Evidence" or "GDPR Erase Subject" to test live RBAC/ABAC enforcement (HTTP 403 vs 200 audited).</div>
+      </div>
+    </section>
+
+    <!-- Row 3: ABAC Matrix + Data Quality & OpenLineage -->
+    <section class="grid-equal">
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Live RBAC / ABAC Policy Matrix (infra/opa/security_abac.rego)</h2>
+            <div class="subtitle">Separation of duties across Restricted Raw Zone, SOC Zone, and Privacy Officer</div>
+          </div>
+        </div>
+        <div class="scroll-table" style="max-height:240px">
+          <table>
+            <thead>
+              <tr>
+                <th>Role</th>
+                <th>k-Anon Aggs</th>
+                <th>Incidents</th>
+                <th>Raw Evidence</th>
+                <th>GDPR Erase</th>
+                <th>Retention</th>
+              </tr>
+            </thead>
+            <tbody id="abacBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div>
+            <h2>Data Quality Gate &amp; OpenLineage Zone Flow</h2>
+            <div class="subtitle">Zero raw PII leak checks · Quarantine DLQ · Iceberg V2 zone provenance</div>
+          </div>
+          <span class="badge b-allow" id="dqBadge">DQ Gate</span>
+        </div>
+        <div class="scroll-table" style="max-height:130px">
+          <table>
+            <thead>
+              <tr>
+                <th>Check</th>
+                <th>Table</th>
+                <th>Observed</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="dqBody"></tbody>
+          </table>
+        </div>
+        <div class="lineage-list" id="lineageList" style="margin-top:10px"></div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // Dev/Demo role key map matching .env.example (production uses OIDC/JWT + OpenBao)
+    const DEV_ROLE_KEYS = {
+      analyst_privacy_safe: "secops-dev-analyst-key",
+      soc_responder: "secops-dev-soc-key",
+      ir_lead_raw_evidence: "secops-dev-ir-lead-key",
+      privacy_officer: "secops-dev-privacy-officer-key"
+    };
+
+    const roleSelect = document.getElementById("roleSelect");
+    const consoleOutput = document.getElementById("consoleOutput");
+
+    function headersForRole(extra = {}) {
+      const role = roleSelect.value;
+      return Object.assign({
+        "X-API-Key": DEV_ROLE_KEYS[role],
+        "X-Actor-Id": "dashboard-" + role
+      }, extra);
+    }
+
+    async function apiFetch(path, options = {}) {
+      const resp = await fetch(path, Object.assign({}, options, {
+        headers: headersForRole(options.headers || {})
+      }));
+      const text = await resp.text();
+      let data = null;
+      try { data = JSON.parse(text); } catch { data = { raw: text }; }
+      return { ok: resp.ok, status: resp.status, data };
+    }
+
+    function sevBadge(sev) {
+      if (sev === "CRITICAL") return '<span class="badge b-crit">CRITICAL</span>';
+      if (sev === "HIGH") return '<span class="badge b-high">HIGH</span>';
+      if (sev === "MEDIUM") return '<span class="badge b-med">MEDIUM</span>';
+      return '<span class="badge b-low">' + sev + '</span>';
+    }
+
+    function statusBadge(st) {
+      if (st === "RETRACTED") return '<span class="badge b-retract">RETRACTED</span>';
+      if (st === "CONFIRMED_TP") return '<span class="badge b-crit">CONFIRMED_TP</span>';
+      if (st === "FALSE_POSITIVE") return '<span class="badge b-low">FALSE_POSITIVE</span>';
+      if (st === "TRIAGING") return '<span class="badge b-high">TRIAGING</span>';
+      return '<span class="badge b-med">' + st + '</span>';
+    }
+
+    function permBadge(val) {
+      if (val === "ALLOW") return '<span class="badge b-allow">ALLOW</span>';
+      if (val === "ALLOW_WITH_JUSTIFICATION") return '<span class="badge b-just">BREAK-GLASS</span>';
+      return '<span class="badge b-deny">DENY 403</span>';
+    }
+
+    async function loadAll() {
+      const role = roleSelect.value;
+      const notice = document.getElementById("roleNotice");
+      notice.className = "banner ok show";
+      notice.textContent = "Authenticated as role [" + role + "] via OPA-aligned RBAC/ABAC policy engine. Privacy zones strictly isolated.";
+
+      // 1. Overview (all roles)
+      const ov = await apiFetch("/v1/overview");
+      if (ov.ok) {
+        const d = ov.data;
+        const c = d.counts || {};
+        const cep = (d.summary && d.summary.cep_metrics) || {};
+        document.getElementById("freshnessText").textContent =
+          "Healthy · Freshness " + (d.freshness_seconds != null ? d.freshness_seconds + "s" : "live") + " · Run " + (d.last_run_id || "-");
+        document.getElementById("kpiIncidents").textContent = c.incidents_active ?? 0;
+        document.getElementById("kpiRetracted").textContent = "Retracted (clock-skew): " + (c.incidents_retracted ?? 0);
+        const prec = cep.precision != null ? (cep.precision * 100).toFixed(1) + "%" : "100.0%";
+        const rec = cep.recall != null ? (cep.recall * 100).toFixed(1) + "%" : "100.0%";
+        document.getElementById("kpiPrecision").textContent = prec + " / " + rec;
+        document.getElementById("kpiDelay").textContent = "Detection p95: " + (cep.detection_delay_p95_ms ?? "--") + " ms";
+        document.getElementById("kpiSilver").textContent = (c.silver_tokenized_rows ?? 0).toLocaleString();
+        document.getElementById("kpiZeroPii").textContent = "Identity Aliases: " + (c.identity_map_rows ?? 0);
+        document.getElementById("kpiKAnon").textContent = c.privacy_safe_buckets ?? 0;
+        document.getElementById("kpiKMin").textContent =
+          "Min k observed: " + (d.privacy_posture ? d.privacy_posture.min_distinct_principals_observed : 5) +
+          " (suppressed: " + ((d.summary && d.summary.privacy_suppressed_buckets) ?? 0) + ")";
+        document.getElementById("kpiDq").textContent = (d.dq_status.passed ?? 0) + "/" + (d.dq_status.total ?? 0) + " PASS";
+        document.getElementById("kpiDlq").textContent = "Quarantined DLQ: " + (c.quarantine_dlq_rows ?? 0);
+        document.getElementById("kpiRaw").textContent = (c.raw_evidence_rows ?? 0).toLocaleString();
+        document.getElementById("kpiAudit").textContent = "Audit Ledger Events: " + (c.audit_events ?? 0);
+
+        if (d.sample_evidence_event_ids && d.sample_evidence_event_ids.length && !document.getElementById("rawEventInput").value) {
+          document.getElementById("rawEventInput").value = d.sample_evidence_event_ids[0];
+        }
+        if (d.gdpr_candidate_tokens && d.gdpr_candidate_tokens.length && !document.getElementById("eraseTokenInput").value) {
+          document.getElementById("eraseTokenInput").value = d.gdpr_candidate_tokens[0];
+        }
+
+        // Rule distribution bars
+        const ruleChart = document.getElementById("ruleChart");
+        const byRule = d.incidents_by_rule || {};
+        const entries = Object.entries(byRule).sort((a, b) => b[1] - a[1]);
+        const maxVal = Math.max(1, ...entries.map(e => e[1]));
+        const colors = ["#f43f5e", "#f59e0b", "#22d3ee", "#818cf8", "#10b981"];
+        ruleChart.innerHTML = entries.map(([rule, count], idx) => `
+          <div class="chart-row">
+            <span class="mono" style="color:var(--text-1)">${rule}</span>
+            <div class="bar-track"><div class="bar-fill" style="width:${(count / maxVal) * 100}%;background:${colors[idx % colors.length]}"></div></div>
+            <span style="text-align:right;font-weight:700">${count}</span>
+          </div>
+        `).join("");
+      }
+
+      // 2. Incidents (SOC / IR Lead only)
+      const inc = await apiFetch("/v1/incidents?limit=25");
+      const incDenied = document.getElementById("incidentsDenied");
+      const incWrap = document.getElementById("incidentsWrap");
+      if (!inc.ok) {
+        incDenied.className = "banner err show";
+        incDenied.textContent = "HTTP " + inc.status + " Policy Enforcement: " + (inc.data.detail || "Access denied");
+        incWrap.style.display = "none";
+        document.getElementById("incidentsBadge").textContent = "DENIED " + inc.status;
+      } else {
+        incDenied.className = "banner err";
+        incWrap.style.display = "block";
+        document.getElementById("incidentsBadge").textContent = inc.data.total + " correlated";
+        const body = document.getElementById("incidentsBody");
+        body.innerHTML = inc.data.items.slice(0, 12).map(item => `
+          <tr>
+            <td class="mono">${item.rule_ref}</td>
+            <td>${sevBadge(item.severity)}</td>
+            <td>${statusBadge(item.status)}</td>
+            <td class="mono">${item.principal_token.slice(0,14)}...<br/><span style="color:var(--text-2)">${item.ip_subnet_masked} (${item.geo_country})</span></td>
+            <td>${item.detection_delay_ms} ms</td>
+            <td class="mono" title="${item.evidence_ref}">${item.evidence_ref.slice(13,25)}...</td>
+            <td>
+              <button class="tiny-btn secondary" onclick="setDisposition('${item.incident_id}','CONFIRMED_TP')">TP</button>
+              <button class="tiny-btn secondary" onclick="setDisposition('${item.incident_id}','FALSE_POSITIVE')">FP</button>
+            </td>
+          </tr>
+        `).join("");
+      }
+
+      // 3. Entity Risk (SOC / IR Lead only)
+      const risk = await apiFetch("/v1/entities/risk?limit=15");
+      const riskDenied = document.getElementById("riskDenied");
+      const riskWrap = document.getElementById("riskWrap");
+      if (!risk.ok) {
+        riskDenied.className = "banner err show";
+        riskDenied.textContent = "HTTP " + risk.status + " Policy Enforcement: " + (risk.data.detail || "Access denied");
+        riskWrap.style.display = "none";
+      } else {
+        riskDenied.className = "banner err";
+        riskWrap.style.display = "block";
+        document.getElementById("riskBody").innerHTML = risk.data.items.slice(0, 8).map(r => `
+          <tr>
+            <td class="mono">${r.principal_token.slice(0,16)}...</td>
+            <td class="mono" style="color:var(--text-1)">${r.masked_email || "-"}</td>
+            <td><strong>${r.risk_score}</strong> ${sevBadge(r.risk_tier)}</td>
+            <td>${r.active_incident_count} / ${r.retracted_incident_count}</td>
+          </tr>
+        `).join("");
+      }
+
+      // 4. Privacy-Safe Aggregates (all roles)
+      const agg = await apiFetch("/v1/aggregates/privacy-safe");
+      if (agg.ok) {
+        document.getElementById("aggBody").innerHTML = agg.data.items.slice(0, 14).map(a => `
+          <tr>
+            <td class="mono">${a.source_stream}</td>
+            <td>${a.geo_country}</td>
+            <td class="mono">${a.action}</td>
+            <td><strong>${a.event_count}</strong></td>
+            <td><span class="badge b-allow">k=${a.distinct_principals}</span></td>
+            <td>${a.failure_count}</td>
+          </tr>
+        `).join("");
+      }
+
+      // 5. ABAC Matrix
+      const mat = await apiFetch("/v1/abac/matrix");
+      if (mat.ok) {
+        document.getElementById("abacBody").innerHTML = mat.data.matrix.map(m => `
+          <tr>
+            <td class="mono" style="font-weight:700">${m.role}</td>
+            <td>${permBadge(m.permissions.privacy_safe_aggregates)}</td>
+            <td>${permBadge(m.permissions.incidents_read)}</td>
+            <td>${permBadge(m.permissions.raw_evidence_read)}</td>
+            <td>${permBadge(m.permissions.privacy_erase)}</td>
+            <td>${permBadge(m.permissions.retention_sweep)}</td>
+          </tr>
+        `).join("");
+      }
+
+      // 6. Data Quality & OpenLineage
+      const dq = await apiFetch("/v1/quality");
+      if (dq.ok) {
+        document.getElementById("dqBadge").textContent = dq.data.passed + "/" + dq.data.total + " PASS";
+        document.getElementById("dqBody").innerHTML = dq.data.checks.map(chk => `
+          <tr>
+            <td class="mono">${chk.check_name}</td>
+            <td class="mono" style="color:var(--text-1)">${chk.table_name}</td>
+            <td>${chk.observed_value}</td>
+            <td>${chk.passed ? '<span class="badge b-allow">PASS</span>' : '<span class="badge b-deny">FAIL</span>'}</td>
+          </tr>
+        `).join("");
+      }
+
+      const lin = await apiFetch("/v1/lineage");
+      if (lin.ok && lin.data.edges) {
+        document.getElementById("lineageList").innerHTML = lin.data.edges.slice(0, 4).map(e => `
+          <div class="lineage-edge">
+            <span class="mono">${e.from}</span>
+            <span class="lineage-arrow">&rarr;</span>
+            <span class="mono" style="color:var(--cyan)">${e.to}</span>
+            <span style="margin-left:auto;color:var(--text-2);font-size:11px">${e.transform}</span>
+          </div>
+        `).join("");
+      }
+    }
+
+    async function setDisposition(incidentId, status) {
+      const res = await apiFetch("/v1/incidents/" + encodeURIComponent(incidentId) + "/disposition", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status, note: "Triaged via SOC Control Tower dashboard" })
+      });
+      consoleOutput.textContent = "POST /v1/incidents/" + incidentId + "/disposition -> HTTP " + res.status + "\n" + JSON.stringify(res.data, null, 2);
+      await loadAll();
+    }
+
+    document.getElementById("btnBreakGlass").addEventListener("click", async () => {
+      const evId = document.getElementById("rawEventInput").value.trim();
+      const just = document.getElementById("justificationInput").value.trim();
+      const res = await apiFetch("/v1/evidence/raw/" + encodeURIComponent(evId), {
+        headers: just ? { "X-Justification": just } : {}
+      });
+      consoleOutput.textContent = "GET /v1/evidence/raw/" + evId + " [role=" + roleSelect.value + "] -> HTTP " + res.status + "\n" + JSON.stringify(res.data, null, 2);
+      await loadAll();
+    });
+
+    document.getElementById("btnGdprErase").addEventListener("click", async () => {
+      const tok = document.getElementById("eraseTokenInput").value.trim();
+      const res = await apiFetch("/v1/privacy/erase/" + encodeURIComponent(tok), {
+        method: "POST",
+        headers: { "X-Justification": "GDPR Article 17 Dashboard Erasure Request" }
+      });
+      consoleOutput.textContent = "POST /v1/privacy/erase/" + tok + " [role=" + roleSelect.value + "] -> HTTP " + res.status + "\n" + JSON.stringify(res.data, null, 2);
+      await loadAll();
+    });
+
+    document.getElementById("btnRetentionSweep").addEventListener("click", async () => {
+      const res = await apiFetch("/v1/privacy/retention-sweep", {
+        method: "POST",
+        headers: { "X-Justification": "Policy Retention TTL Sweep via Control Tower" }
+      });
+      consoleOutput.textContent = "POST /v1/privacy/retention-sweep [role=" + roleSelect.value + "] -> HTTP " + res.status + "\n" + JSON.stringify(res.data, null, 2);
+      await loadAll();
+    });
+
+    roleSelect.addEventListener("change", loadAll);
+    document.getElementById("refreshBtn").addEventListener("click", loadAll);
+    loadAll();
+  </script>
+</body>
+</html>

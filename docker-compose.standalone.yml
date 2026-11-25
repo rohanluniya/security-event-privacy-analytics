@@ -1,0 +1,24 @@
+# Single-container standalone compose file for quick local demo on any Docker-enabled host.
+services:
+  secops-platform:
+    build:
+      context: .
+      dockerfile: infra/docker/Dockerfile.standalone
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env.example
+    environment:
+      SECOPS_RUNTIME_MODE: "local_native"
+      SECOPS_API_HOST: "0.0.0.0"
+      SECOPS_API_PORT: "8080"
+    volumes:
+      - secops_standalone_data:/app/.local_data
+    healthcheck:
+      test: ["CMD", ".venv/bin/python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health')"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  secops_standalone_data:

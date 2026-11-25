@@ -1,0 +1,110 @@
+{
+  "drills": {
+    "drill_01_credential_stuffing_plus_noisy_nat_storm": {
+      "metrics": {
+        "nat_aware_v2_false_positives": 0,
+        "nat_aware_v2_precision": 1.0,
+        "nat_aware_v2_recall": 1.0,
+        "nat_naive_v1_false_positives": 4,
+        "nat_naive_v1_precision": 0.8333
+      },
+      "passed": true,
+      "recorded_at_ms": 1795585316692,
+      "title": "Credential stuffing amid shared corporate NAT login storm (NAT-aware v2 vs NAT-naive v1)"
+    },
+    "drill_02_clock_skewed_impossible_travel_retraction": {
+      "metrics": {
+        "active_incidents": 20,
+        "retracted_entities_zero_risk": true,
+        "retracted_incidents": 2
+      },
+      "passed": true,
+      "recorded_at_ms": 1795585316980,
+      "title": "Clock-skewed false impossible-travel alert retracted by late NTP/MFA event"
+    },
+    "drill_03_unauthorized_raw_evidence_abac_rejection": {
+      "metrics": {
+        "http_status_matrix": {
+          "analyst_privacy_safe": 403,
+          "ir_lead_missing_justification": 403,
+          "ir_lead_with_justification": 200,
+          "privacy_officer": 403,
+          "soc_responder": 403,
+          "unauthenticated": 401
+        },
+        "logged_denial_audits": 5
+      },
+      "passed": true,
+      "recorded_at_ms": 1795585317270,
+      "title": "Unauthorized raw-evidence & unjustified break-glass requests rejected with 401/403 and audited"
+    },
+    "drill_04_gdpr_subject_erasure_and_crypto_shredding": {
+      "metrics": {
+        "aggregates_preserved": 19,
+        "audit_id": "aud_be8b9dd521f24844",
+        "identity_map_after": 0,
+        "raw_after": 0,
+        "raw_before": 14,
+        "silver_after": 0,
+        "silver_before": 14,
+        "vault_key_shredded": true
+      },
+      "passed": true,
+      "recorded_at_ms": 1795585317566,
+      "title": "GDPR Article 17 crypto-shredding & subject purge leaves 0 subject rows while preserving k-anon aggregates"
+    },
+    "drill_05_retention_window_ttl_purge": {
+      "metrics": {
+        "audit_id": "aud_ef492ff13656486b",
+        "expired_rows_remaining": 0,
+        "purged_expired_rows": 15,
+        "raw_before": 1228,
+        "remaining_fresh_rows": 1213
+      },
+      "passed": true,
+      "recorded_at_ms": 1795585317817,
+      "title": "7-day raw evidence retention TTL sweep purges expired historical records and preserves fresh evidence"
+    },
+    "drill_06_broker_outage_wal_crash_recovery": {
+      "metrics": {
+        "incident_ids_identical": true,
+        "initial_silver_rows": 1364,
+        "recovered_silver_rows": 1364,
+        "wal_total_records": 1422
+      },
+      "passed": true,
+      "recorded_at_ms": 1795585318220,
+      "title": "Mid-stream consumer crash & derived state wipe recovered bit-identically via durable WAL replay"
+    },
+    "drill_07_schema_invalid_poison_dlq_quarantine": {
+      "metrics": {
+        "dq_checks_passed": "7/7",
+        "injected_poison_records": 39,
+        "quarantined_dlq_rows": 39,
+        "valid_silver_processed": 1160
+      },
+      "passed": true,
+      "recorded_at_ms": 1795585318402,
+      "title": "Malformed poison telemetry flood quarantined in bronze.quarantine_dlq with zero pipeline failures"
+    },
+    "drill_08_duplicate_replay_idempotency_storm": {
+      "metrics": {
+        "base_incidents": 10,
+        "base_silver_rows": 1160,
+        "extra_duplicates_injected": 600,
+        "storm_incidents": 10,
+        "storm_silver_rows": 1160,
+        "total_deduplicated": 634
+      },
+      "passed": true,
+      "recorded_at_ms": 1795585318795,
+      "title": "3x at-least-once duplicate storm absorbed idempotently with zero row or incident inflation"
+    }
+  },
+  "suite": "security-event-privacy-analytics-chaos-drills",
+  "summary": {
+    "failed_drills": 0,
+    "passed_drills": 8,
+    "total_drills": 8
+  }
+}

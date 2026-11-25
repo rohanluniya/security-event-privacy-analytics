@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: secops-privacy-platform
+  labels:
+    app.kubernetes.io/part-of: security-event-privacy-analytics
+    pod-security.kubernetes.io/enforce: restricted

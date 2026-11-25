@@ -1,0 +1,62 @@
+[project]
+name = "security-event-privacy-analytics"
+version = "1.0.0"
+description = "Real-Time Security Event & Privacy-Preserving Analytics Platform: Streaming CEP, Identity Resolution, Cryptographic Tokenization, Iceberg V2 Privacy Zones, and OPA-Aligned ABAC."
+readme = "README.md"
+license = { text = "Apache-2.0" }
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "pyiceberg[sql-sqlite,pyiceberg-core]==0.12.0",
+    "duckdb==2.0.0",
+    "pyarrow==25.0.1",
+    "fastavro==1.13.1",
+    "fastapi==0.163.2",
+    "uvicorn==0.54.0",
+    "pydantic>=2.9.0,<3.0.0",
+    "requests>=2.32.3,<3.0.0",
+    "matplotlib>=3.9.0,<4.0.0",
+    "prometheus-client>=0.21.0,<1.0.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.3.0,<10.0.0",
+    "httpx>=0.27.0,<1.0.0",
+    "hypothesis>=6.112.0,<7.0.0",
+    "ruff>=0.8.0,<1.0.0",
+    "mypy>=1.13.0,<2.0.0",
+    "types-requests>=2.32.0.20241016",
+]
+
+[build-system]
+requires = ["hatchling>=1.25.0"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["services", "ingestion", "processing", "models"]
+
+[tool.uv]
+package = true
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "W", "B", "UP"]
+ignore = ["E501"]
+
+[tool.ruff.lint.per-file-ignores]
+"services/secops_platform/api.py" = ["B008"]
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = false
+warn_unused_configs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true
+exclude = ["processing/flink/", "processing/spark/", "processing/airflow/"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

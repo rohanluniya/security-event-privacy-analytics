@@ -1,0 +1,4 @@
+profile,valid_events,dlq_quarantined,cep_stream_wall_ms,cep_stream_throughput_eps,e2e_lakehouse_wall_ms,e2e_lakehouse_throughput_eps,v2_precision,v2_recall,v2_f1,v2_fp,v2_retracted,detection_delay_p50_ms,detection_delay_p95_ms,detection_delay_p99_ms,peak_state_entries
+smoke,1194,15,27.14,44001.9,476.85,2535.4,1.0,1.0,1.0,0,1,190.0,300.0,300.0,1310
+local,4553,60,107.81,42230.9,444.44,10379.3,1.0,1.0,1.0,0,4,190.0,300.0,300.0,4711
+stress,17861,250,403.57,44257.3,1443.77,12544.2,1.0,1.0,1.0,0,4,190.0,300.0,300.0,17641

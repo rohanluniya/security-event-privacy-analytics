@@ -1,0 +1,14 @@
+{
+  "compaction_wall_ms": 47.88,
+  "duckdb_agg_after_ms": 9.464,
+  "duckdb_agg_before_ms": 10.101,
+  "file_reduction_pct": 92.3,
+  "micro_batches_written": 24,
+  "parquet_files_after": 2,
+  "parquet_files_before": 26,
+  "row_count": 4553,
+  "scan_median_after_ms": 4.097,
+  "scan_median_before_ms": 32.598,
+  "scan_speedup_x": 7.96,
+  "table": "silver.tokenized_security_events"
+}

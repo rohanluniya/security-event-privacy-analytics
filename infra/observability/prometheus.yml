@@ -1,0 +1,22 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+rule_files:
+  - /etc/prometheus/alerts.yml
+
+scrape_configs:
+  - job_name: "secops-control-plane"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["secops-api:8080"]
+  - job_name: "opa-policy-engine"
+    metrics_path: "/metrics"
+    static_configs:
+      - targets: ["opa:8181"]
+  - job_name: "openbao-vault"
+    metrics_path: "/v1/sys/metrics"
+    params:
+      format: ["prometheus"]
+    static_configs:
+      - targets: ["openbao:8200"]

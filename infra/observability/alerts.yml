@@ -1,0 +1,42 @@
+groups:
+  - name: secops_privacy_platform_alerts
+    rules:
+      - alert: HighCepDetectionLatencyP95
+        expr: histogram_quantile(0.95, sum(rate(secops_cep_detection_delay_ms_bucket[5m])) by (le)) > 5000
+        for: 5m
+        labels:
+          severity: warning
+          team: secops-engineering
+        annotations:
+          summary: "CEP p95 detection delay exceeded 5000 ms"
+          runbook: "docs/incidents/runbook-cep-lag-and-retractions.md"
+
+      - alert: UnauthorizedRawEvidenceSpike
+        expr: sum(increase(secops_abac_decisions_total{resource="raw_evidence_read",decision="DENY"}[10m])) >= 5
+        for: 1m
+        labels:
+          severity: critical
+          team: security-governance
+        annotations:
+          summary: "Repeated unauthorized raw-evidence access attempts blocked by ABAC (HTTP 403)"
+          runbook: "docs/incidents/runbook-cep-lag-and-retractions.md"
+
+      - alert: PrivacyDataQualityCheckFailed
+        expr: secops_dq_checks_status{status="failed"} > 0
+        for: 1m
+        labels:
+          severity: critical
+          team: privacy-engineering
+        annotations:
+          summary: "One or more privacy/PII-leak or k-anonymity DQ checks failed"
+          runbook: "docs/incidents/runbook-cep-lag-and-retractions.md"
+
+      - alert: CepBoundedStateNearCap
+        expr: secops_cep_state_entries > 45000
+        for: 5m
+        labels:
+          severity: warning
+          team: secops-engineering
+        annotations:
+          summary: "CEP bounded state approaching configured eviction limit"
+          runbook: "docs/incidents/runbook-cep-lag-and-retractions.md"

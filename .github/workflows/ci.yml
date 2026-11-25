@@ -1,0 +1,63 @@
+name: CI — Security Event & Privacy-Preserving Analytics Platform
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  fast-pr-checks:
+    name: Lint, Typecheck, Contracts, Unit, Integration & Chaos
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install uv 0.12.3
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.12.3"
+          python-version: "3.12.8"
+
+      - name: Sync locked environment
+        run: uv sync --frozen --python 3.12.8
+
+      - name: Verify zero unpinned container tags
+        run: |
+          if git grep -nE "image:.*:[l]atest|FROM.*:[l]atest" -- ':!.github/workflows/ci.yml'; then
+            echo "ERROR: Unpinned container tag found!"
+            exit 1
+          fi
+
+      - name: Ruff lint check
+        run: uv run ruff check services ingestion processing models tests benchmarks scripts
+
+      - name: Mypy static type check
+        run: uv run mypy services ingestion processing models
+
+      - name: License & model compliance check
+        run: uv run python scripts/check_licenses.py
+
+      - name: Generate CycloneDX SBOM
+        run: uv run python scripts/generate_sbom.py
+
+      - name: Run full test suite (unit, property, contracts, integration, e2e, chaos)
+        run: uv run pytest -v --junitxml=results/tests/junit.xml
+
+      - name: Run smoke benchmark
+        run: uv run python benchmarks/run_benchmarks.py --profiles smoke
+
+  stress-benchmark:
+    name: Extended Stress Benchmark (manual dispatch)
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          version: "0.12.3"
+          python-version: "3.12.8"
+      - run: uv sync --frozen --python 3.12.8
+      - run: uv run python benchmarks/run_benchmarks.py --profiles smoke local stress

@@ -1,0 +1,32 @@
+{
+  "type": "record",
+  "name": "SecurityEvent",
+  "namespace": "com.secops.privacy.events",
+  "doc": "Backward- and forward-compatible v2 multi-source security telemetry event contract adding NAT egress metadata, ASN, clock skew instrumentation, and late-event retraction flag.",
+  "fields": [
+    {"name": "event_id", "type": "string", "doc": "Deterministic globally unique event identifier."},
+    {"name": "event_time_ms", "type": "long", "doc": "Source-emitted event timestamp in UTC epoch milliseconds."},
+    {"name": "ingest_time_ms", "type": "long", "doc": "Ingestion broker receipt timestamp in UTC epoch milliseconds."},
+    {"name": "source_stream", "type": "string", "doc": "One of: auth, endpoint, dns, proxy, api_gateway, application."},
+    {"name": "action", "type": "string", "doc": "Normalized security event verb."},
+    {"name": "outcome", "type": "string", "doc": "Event outcome: success, failure, blocked, info."},
+    {"name": "actor_email", "type": ["null", "string"], "default": null, "doc": "Raw user email (PII - restricted to bronze.raw_security_evidence only)."},
+    {"name": "device_id", "type": ["null", "string"], "default": null, "doc": "Raw endpoint/device hardware identifier (PII)."},
+    {"name": "session_id", "type": ["null", "string"], "default": null, "doc": "Raw authentication session identifier."},
+    {"name": "token_id", "type": ["null", "string"], "default": null, "doc": "Raw OAuth/JWT token identifier."},
+    {"name": "source_ip", "type": "string", "doc": "Raw client or egress IPv4 address (PII)."},
+    {"name": "geo_country", "type": "string", "doc": "ISO-3166 alpha-2 country code."},
+    {"name": "geo_lat", "type": "double", "doc": "Approximate latitude in decimal degrees."},
+    {"name": "geo_lon", "type": "double", "doc": "Approximate longitude in decimal degrees."},
+    {"name": "target_resource", "type": "string", "doc": "Target service, host, domain, or API route."},
+    {"name": "http_status", "type": ["null", "int"], "default": null, "doc": "Optional HTTP status code."},
+    {"name": "bytes_out", "type": "long", "default": 0, "doc": "Outbound byte count."},
+    {"name": "scenario_label", "type": "string", "default": "benign", "doc": "Synthetic ground-truth evaluation label."},
+    {"name": "attack_id", "type": ["null", "string"], "default": null, "doc": "Synthetic ground-truth campaign ID."},
+    {"name": "nat_egress_flag", "type": "boolean", "default": false, "doc": "True if source_ip belongs to a known shared corporate NAT/VPN egress gateway."},
+    {"name": "geo_asn", "type": "string", "default": "AS0", "doc": "Autonomous System Number of source_ip."},
+    {"name": "clock_skew_ms", "type": "long", "default": 0, "doc": "Measured or simulated host clock offset relative to NTP in milliseconds."},
+    {"name": "is_retraction_evidence", "type": "boolean", "default": false, "doc": "True when a delayed authoritative clock-sync or MFA-verified event arrives to retract a prior speculative alert."},
+    {"name": "schema_version", "type": "int", "default": 2, "doc": "Contract evolution version number."}
+  ]
+}

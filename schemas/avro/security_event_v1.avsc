@@ -1,0 +1,27 @@
+{
+  "type": "record",
+  "name": "SecurityEvent",
+  "namespace": "com.secops.privacy.events",
+  "doc": "Canonical v1 multi-source security telemetry event contract across auth, endpoint, dns, proxy, api_gateway, and application streams.",
+  "fields": [
+    {"name": "event_id", "type": "string", "doc": "Deterministic globally unique event identifier."},
+    {"name": "event_time_ms", "type": "long", "doc": "Source-emitted event timestamp in UTC epoch milliseconds."},
+    {"name": "ingest_time_ms", "type": "long", "doc": "Ingestion broker receipt timestamp in UTC epoch milliseconds."},
+    {"name": "source_stream", "type": "string", "doc": "One of: auth, endpoint, dns, proxy, api_gateway, application."},
+    {"name": "action", "type": "string", "doc": "Normalized security event verb (login_failed, login_success, token_use, priv_escalation, process_exec, dns_query, proxy_beacon, api_call, gdpr_delete_request)."},
+    {"name": "outcome", "type": "string", "doc": "Event outcome: success, failure, blocked, info."},
+    {"name": "actor_email", "type": ["null", "string"], "default": null, "doc": "Raw user email (PII - restricted to bronze.raw_security_evidence only)."},
+    {"name": "device_id", "type": ["null", "string"], "default": null, "doc": "Raw endpoint/device hardware identifier (PII)."},
+    {"name": "session_id", "type": ["null", "string"], "default": null, "doc": "Raw authentication session identifier."},
+    {"name": "token_id", "type": ["null", "string"], "default": null, "doc": "Raw OAuth/JWT token identifier."},
+    {"name": "source_ip", "type": "string", "doc": "Raw client or egress IPv4 address (PII)."},
+    {"name": "geo_country", "type": "string", "doc": "ISO-3166 alpha-2 country code."},
+    {"name": "geo_lat", "type": "double", "doc": "Approximate latitude in decimal degrees."},
+    {"name": "geo_lon", "type": "double", "doc": "Approximate longitude in decimal degrees."},
+    {"name": "target_resource", "type": "string", "doc": "Target service, host, domain, or API route."},
+    {"name": "http_status", "type": ["null", "int"], "default": null, "doc": "Optional HTTP status code."},
+    {"name": "bytes_out", "type": "long", "default": 0, "doc": "Outbound byte count for proxy/network/API events."},
+    {"name": "scenario_label", "type": "string", "default": "benign", "doc": "Synthetic evaluation label (benign, nat_benign, credential_stuffing, impossible_travel, clock_skew_false_travel, stolen_token_misuse, lateral_movement, anomalous_access_burst, gdpr_deletion)."},
+    {"name": "attack_id", "type": ["null", "string"], "default": null, "doc": "Synthetic ground-truth incident campaign identifier for precision/recall measurement."}
+  ]
+}

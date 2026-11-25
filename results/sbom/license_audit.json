@@ -1,0 +1,375 @@
+{
+  "external_restricted_datasets": 0,
+  "flagged_packages": [],
+  "packages": [
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "annotated-doc",
+      "version": "0.0.6"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "annotated-types",
+      "version": "0.8.0"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "anyio",
+      "version": "4.16.0"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "cachetools",
+      "version": "8.0.1"
+    },
+    {
+      "compliant": true,
+      "license": "MPL-2.0",
+      "package": "certifi",
+      "version": "2026.10.23"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "charset-normalizer",
+      "version": "3.5.2"
+    },
+    {
+      "compliant": true,
+      "license": "BSD-3-Clause",
+      "package": "click",
+      "version": "8.5.1"
+    },
+    {
+      "compliant": true,
+      "license": "BSD-3-Clause",
+      "package": "contourpy",
+      "version": "1.4.0"
+    },
+    {
+      "compliant": true,
+      "license": "Copyright (c) 2015, matplotlib project",
+      "package": "cycler",
+      "version": "0.12.1"
+    },
+    {
+      "compliant": true,
+      "license": "MIT License",
+      "package": "duckdb",
+      "version": "2.0.0"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "fastapi",
+      "version": "0.163.2"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "fastavro",
+      "version": "1.13.1"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "fonttools",
+      "version": "4.67.0"
+    },
+    {
+      "compliant": true,
+      "license": "BSD-3-Clause",
+      "package": "fsspec",
+      "version": "2026.9.0"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "h11",
+      "version": "0.16.0"
+    },
+    {
+      "compliant": true,
+      "license": "BSD-3-Clause",
+      "package": "httpcore",
+      "version": "1.0.9"
+    },
+    {
+      "compliant": true,
+      "license": "BSD-3-Clause",
+      "package": "httpx",
+      "version": "0.28.1"
+    },
+    {
+      "compliant": true,
+      "license": "MPL-2.0",
+      "package": "hypothesis",
+      "version": "6.170.15"
+    },
+    {
+      "compliant": true,
+      "license": "BSD-3-Clause",
+      "package": "idna",
+      "version": "3.20"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "iniconfig",
+      "version": "2.3.1"
+    },
+    {
+      "compliant": true,
+      "license": "=========================",
+      "package": "kiwisolver",
+      "version": "1.5.1"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "librt",
+      "version": "0.16.0"
+    },
+    {
+      "compliant": true,
+      "license": "MIT License",
+      "package": "markdown-it-py",
+      "version": "4.3.0"
+    },
+    {
+      "compliant": true,
+      "license": "License agreement for matplotlib versions 1.3.0 and later",
+      "package": "matplotlib",
+      "version": "3.11.2"
+    },
+    {
+      "compliant": true,
+      "license": "MIT License",
+      "package": "mdurl",
+      "version": "0.1.2"
+    },
+    {
+      "compliant": true,
+      "license": "MIT License",
+      "package": "mmh3",
+      "version": "5.3.1"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "mypy",
+      "version": "1.20.2"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "mypy_extensions",
+      "version": "1.2.0"
+    },
+    {
+      "compliant": true,
+      "license": "BSD-3-Clause AND 0BSD AND MIT AND Zlib AND CC0-1.0",
+      "package": "numpy",
+      "version": "2.5.5"
+    },
+    {
+      "compliant": true,
+      "license": "Apache-2.0",
+      "package": "opentelemetry-api",
+      "version": "1.45.2"
+    },
+    {
+      "compliant": true,
+      "license": "Apache-2.0 OR BSD-2-Clause",
+      "package": "packaging",
+      "version": "26.3"
+    },
+    {
+      "compliant": true,
+      "license": "Mozilla Public License 2.0 (MPL 2.0)",
+      "package": "pathspec",
+      "version": "1.1.1"
+    },
+    {
+      "compliant": true,
+      "license": "MIT-CMU",
+      "package": "pillow",
+      "version": "13.0.0"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "pluggy",
+      "version": "1.7.0"
+    },
+    {
+      "compliant": true,
+      "license": "Apache-2.0 AND BSD-2-Clause",
+      "package": "prometheus_client",
+      "version": "0.26.0"
+    },
+    {
+      "compliant": true,
+      "license": "Apache-2.0",
+      "package": "pyarrow",
+      "version": "25.0.1"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "pydantic",
+      "version": "2.14.3"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "pydantic_core",
+      "version": "2.50.4"
+    },
+    {
+      "compliant": true,
+      "license": "BSD-2-Clause",
+      "package": "Pygments",
+      "version": "2.21.0"
+    },
+    {
+      "compliant": true,
+      "license": "Apache-2.0",
+      "package": "pyiceberg",
+      "version": "0.12.0"
+    },
+    {
+      "compliant": true,
+      "license": "Apache Software License",
+      "package": "pyiceberg-core",
+      "version": "0.10.1"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "pyparsing",
+      "version": "3.3.3"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "pyroaring",
+      "version": "1.2.0"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "pytest",
+      "version": "9.2.0"
+    },
+    {
+      "compliant": true,
+      "license": "BSD-3-Clause",
+      "package": "python-dateutil",
+      "version": "4.0.0"
+    },
+    {
+      "compliant": true,
+      "license": "Apache-2.0",
+      "package": "requests",
+      "version": "2.34.2"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "rich",
+      "version": "15.0.0"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "ruff",
+      "version": "0.17.5"
+    },
+    {
+      "compliant": true,
+      "license": "Apache-2.0",
+      "package": "security-event-privacy-analytics",
+      "version": "1.0.0"
+    },
+    {
+      "compliant": true,
+      "license": "Apache 2.0",
+      "package": "sortedcontainers",
+      "version": "2.4.0"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "SQLAlchemy",
+      "version": "2.1.9"
+    },
+    {
+      "compliant": true,
+      "license": "BSD-3-Clause",
+      "package": "starlette",
+      "version": "1.10.0"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "strictyaml",
+      "version": "1.7.3"
+    },
+    {
+      "compliant": true,
+      "license": "Apache-2.0",
+      "package": "tenacity",
+      "version": "9.2.1"
+    },
+    {
+      "compliant": true,
+      "license": "Apache-2.0",
+      "package": "types-requests",
+      "version": "2.33.0.20261030"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "typing-inspection",
+      "version": "0.4.5"
+    },
+    {
+      "compliant": true,
+      "license": "PSF-2.0",
+      "package": "typing_extensions",
+      "version": "4.16.0"
+    },
+    {
+      "compliant": true,
+      "license": "Apache-2.0",
+      "package": "tzdata",
+      "version": "2026.6"
+    },
+    {
+      "compliant": true,
+      "license": "MIT",
+      "package": "urllib3",
+      "version": "2.8.0"
+    },
+    {
+      "compliant": true,
+      "license": "BSD-3-Clause",
+      "package": "uvicorn",
+      "version": "0.54.0"
+    },
+    {
+      "compliant": true,
+      "license": "BSD-3-Clause",
+      "package": "zstandard",
+      "version": "0.25.0"
+    }
+  ],
+  "pretrained_ml_models_downloaded": 0,
+  "status": "PASS",
+  "total_packages_audited": 61
+}

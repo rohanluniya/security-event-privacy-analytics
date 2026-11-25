@@ -1,0 +1,48 @@
+{
+  "title": "SecOps & Privacy-Preserving Analytics Platform",
+  "uid": "secops-privacy-control-tower",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "15s",
+  "panels": [
+    {
+      "id": 1,
+      "type": "stat",
+      "title": "Events Ingested (Valid vs DLQ)",
+      "targets": [{ "expr": "sum by (status) (secops_events_ingested_total)" }]
+    },
+    {
+      "id": 2,
+      "type": "timeseries",
+      "title": "CEP Incidents Emitted vs Retracted by Rule",
+      "targets": [{ "expr": "sum by (rule_ref, outcome) (secops_cep_incidents_total)" }]
+    },
+    {
+      "id": 3,
+      "type": "timeseries",
+      "title": "CEP Detection Delay p95 (ms)",
+      "targets": [{ "expr": "histogram_quantile(0.95, sum(rate(secops_cep_detection_delay_ms_bucket[5m])) by (le))" }]
+    },
+    {
+      "id": 4,
+      "type": "stat",
+      "title": "ABAC Policy Decisions (ALLOW vs DENY)",
+      "targets": [{ "expr": "sum by (role, decision) (secops_abac_decisions_total)" }]
+    },
+    {
+      "id": 5,
+      "type": "gauge",
+      "title": "CEP Bounded State Entries",
+      "targets": [{ "expr": "secops_cep_state_entries" }]
+    },
+    {
+      "id": 6,
+      "type": "stat",
+      "title": "GDPR Erasures & Retention Purged Rows",
+      "targets": [
+        { "expr": "secops_privacy_erasures_total" },
+        { "expr": "sum by (table) (secops_retention_purged_rows_total)" }
+      ]
+    }
+  ]
+}

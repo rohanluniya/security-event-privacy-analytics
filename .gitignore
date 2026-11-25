@@ -1,0 +1,36 @@
+# Python & virtual environments
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+
+# Test & linter caches
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+htmlcov/
+
+# Local runtime state & lakehouse data (reproducible via scripts / make)
+.local_data/
+data/
+warehouse/
+*.db
+*.sqlite
+*.sqlite3
+*.log
+*.pid
+
+# Secrets & local overrides
+.env
+.env.local
+*.pem
+*.key
+
+# OS artifacts
+.DS_Store
+Thumbs.db

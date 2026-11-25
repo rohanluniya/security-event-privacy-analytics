@@ -1,0 +1,102 @@
+{
+  "edges": [
+    {
+      "from": "security.telemetry.raw.v2",
+      "to": "bronze.raw_security_evidence",
+      "transform": "avro_v2_validate_dedup"
+    },
+    {
+      "from": "security.telemetry.raw.v2",
+      "to": "bronze.quarantine_dlq",
+      "transform": "dlq_poison_quarantine"
+    },
+    {
+      "from": "bronze.raw_security_evidence",
+      "to": "silver.tokenized_security_events",
+      "transform": "hmac_sha256_masking"
+    },
+    {
+      "from": "bronze.raw_security_evidence",
+      "to": "silver.identity_resolution_map",
+      "transform": "nat_safe_identity_resolution"
+    },
+    {
+      "from": "silver.tokenized_security_events",
+      "to": "gold.cep_security_incidents",
+      "transform": "event_time_cep_interval_join"
+    },
+    {
+      "from": "gold.cep_security_incidents",
+      "to": "gold.entity_risk_scores",
+      "transform": "severity_weighted_risk_scoring"
+    },
+    {
+      "from": "silver.tokenized_security_events",
+      "to": "gold.privacy_safe_aggregates",
+      "transform": "k_anonymity_aggregation_k5"
+    }
+  ],
+  "emitted_at_ms": 1795585073466,
+  "inputs": [
+    {
+      "name": "security.telemetry.raw.v2",
+      "namespace": "wal.broker",
+      "records": 2344
+    }
+  ],
+  "job": {
+    "name": "streaming_cep_and_privacy_lakehouse_pipeline",
+    "namespace": "secops.privacy.platform"
+  },
+  "outputs": [
+    {
+      "name": "bronze.raw_security_evidence",
+      "namespace": "iceberg.bronze",
+      "records": 2247,
+      "zone": "restricted_raw_pii"
+    },
+    {
+      "name": "bronze.quarantine_dlq",
+      "namespace": "iceberg.bronze",
+      "records": 30,
+      "zone": "restricted_quarantine"
+    },
+    {
+      "name": "silver.tokenized_security_events",
+      "namespace": "iceberg.silver",
+      "records": 2247,
+      "zone": "tokenized_analytics"
+    },
+    {
+      "name": "silver.identity_resolution_map",
+      "namespace": "iceberg.silver",
+      "zone": "vault_managed_linkage"
+    },
+    {
+      "name": "gold.cep_security_incidents",
+      "namespace": "iceberg.gold",
+      "records": 22,
+      "zone": "tokenized_soc_incidents"
+    },
+    {
+      "name": "gold.entity_risk_scores",
+      "namespace": "iceberg.gold",
+      "records": 22,
+      "zone": "tokenized_soc_risk"
+    },
+    {
+      "name": "gold.privacy_safe_aggregates",
+      "namespace": "iceberg.gold",
+      "records": 23,
+      "zone": "privacy_safe_k_anon"
+    },
+    {
+      "name": "quality.dq_results",
+      "namespace": "iceberg.quality",
+      "records": 7,
+      "zone": "governance_quality"
+    }
+  ],
+  "run_id": "run_42_c94b0dfd",
+  "spec": "OpenLineage-Compatible Local Export (Marquez target in distributed profile)"
+}
