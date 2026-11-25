@@ -40,7 +40,7 @@ Measured via `benchmarks/run_benchmarks.py` on identical seeded multi-stream tel
 Requires only [`uv`](https://docs.astral.sh/uv/) and Python 3.12 (no Docker, no JVM):
 
 ```bash
-git clone https://github.com/ankdeshm/security-event-privacy-analytics.git
+git clone https://github.com/rohanluniya/security-event-privacy-analytics.git
 cd security-event-privacy-analytics
 
 # One-command bootstrap: syncs locked Python 3.12 env, runs deterministic WAL -> CEP -> Iceberg V2 pipeline, starts live API + Dashboard on :8080
